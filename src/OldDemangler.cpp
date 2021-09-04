@@ -257,6 +257,7 @@ private:
   }
 
   llvm::Optional<Directness> demangleDirectness(unsigned depth) {
+    (void)depth;
     if (Mangled.nextIf('d'))
       return Directness::Direct;
     if (Mangled.nextIf('i'))
@@ -265,6 +266,7 @@ private:
   }
 
   bool demangleNatural(Node::IndexType &num, unsigned depth) {
+    (void)depth;
     if (!Mangled)
       return false;
     char c = Mangled.next();
@@ -294,6 +296,7 @@ private:
   }
 
   llvm::Optional<ValueWitnessKind> demangleValueWitnessKind(unsigned depth) {
+    (void)depth;
     char Code[2];
     if (!Mangled)
       return llvm::None;
@@ -509,6 +512,87 @@ private:
     }
 
     return specialization;
+  }
+
+  NodePointer demangleIdentifier(unsigned depth,
+                                 llvm::Optional<Node::Kind> kind = llvm::None) {
+    if (!Mangled)
+      return nullptr;
+    
+    bool isPunycoded = Mangled.nextIf('X');
+    std::string decodeBuffer;
+
+    auto decode = [&](StringRef s) -> StringRef {
+      if (!isPunycoded)
+        return s;
+      if (!Punycode::decodePunycodeUTF8(s, decodeBuffer))
+        return {};
+      return decodeBuffer;
+    };
+    
+    bool isOperator = false;
+    if (Mangled.nextIf('o')) {
+      isOperator = true;
+      // Operator identifiers aren't valid in the contexts that are
+      // building more specific identifiers.
+      if (kind.hasValue()) return nullptr;
+
+      char op_mode = Mangled.next();
+      switch (op_mode) {
+      case 'p':
+        kind = Node::Kind::PrefixOperator;
+        break;
+      case 'P':
+        kind = Node::Kind::PostfixOperator;
+        break;
+      case 'i':
+        kind = Node::Kind::InfixOperator;
+        break;
+      default:
+        return nullptr;
+      }
+    }
+
+    if (!kind.hasValue()) kind = Node::Kind::Identifier;
+
+    Node::IndexType length;
+    if (!demangleNatural(length, depth + 1))
+      return nullptr;
+    if (!Mangled.hasAtLeast(length))
+      return nullptr;
+    
+    StringRef identifier = Mangled.slice(length);
+    Mangled.advanceOffset(length);
+    
+    // Decode Unicode identifiers.
+    identifier = decode(identifier);
+    if (identifier.empty())
+      return nullptr;
+
+    // Decode operator names.
+    std::string opDecodeBuffer;
+    if (isOperator) {
+                                        // abcdefghijklmnopqrstuvwxyz
+      static const char op_char_table[] = "& @/= >    <*!|+?%-~   ^ .";
+
+      opDecodeBuffer.reserve(identifier.size());
+      for (signed char c : identifier) {
+        if (c < 0) {
+          // Pass through Unicode characters.
+          opDecodeBuffer.push_back(c);
+          continue;
+        }
+        if (c < 'a' || c > 'z')
+          return nullptr;
+        char o = op_char_table[c - 'a'];
+        if (o == ' ')
+          return nullptr;
+        opDecodeBuffer.push_back(o);
+      }
+      identifier = opDecodeBuffer;
+    }
+    
+    return Factory.createNode(*kind, identifier);
   }
 
 /// TODO: This is an atrocity. Come up with a shorter name.
@@ -764,87 +848,6 @@ private:
 
     // decl-name ::= identifier
     return demangleIdentifier(depth + 1);
-  }
-
-  NodePointer demangleIdentifier(unsigned depth,
-                                 llvm::Optional<Node::Kind> kind = llvm::None) {
-    if (!Mangled)
-      return nullptr;
-    
-    bool isPunycoded = Mangled.nextIf('X');
-    std::string decodeBuffer;
-
-    auto decode = [&](StringRef s) -> StringRef {
-      if (!isPunycoded)
-        return s;
-      if (!Punycode::decodePunycodeUTF8(s, decodeBuffer))
-        return {};
-      return decodeBuffer;
-    };
-    
-    bool isOperator = false;
-    if (Mangled.nextIf('o')) {
-      isOperator = true;
-      // Operator identifiers aren't valid in the contexts that are
-      // building more specific identifiers.
-      if (kind.hasValue()) return nullptr;
-
-      char op_mode = Mangled.next();
-      switch (op_mode) {
-      case 'p':
-        kind = Node::Kind::PrefixOperator;
-        break;
-      case 'P':
-        kind = Node::Kind::PostfixOperator;
-        break;
-      case 'i':
-        kind = Node::Kind::InfixOperator;
-        break;
-      default:
-        return nullptr;
-      }
-    }
-
-    if (!kind.hasValue()) kind = Node::Kind::Identifier;
-
-    Node::IndexType length;
-    if (!demangleNatural(length, depth + 1))
-      return nullptr;
-    if (!Mangled.hasAtLeast(length))
-      return nullptr;
-    
-    StringRef identifier = Mangled.slice(length);
-    Mangled.advanceOffset(length);
-    
-    // Decode Unicode identifiers.
-    identifier = decode(identifier);
-    if (identifier.empty())
-      return nullptr;
-
-    // Decode operator names.
-    std::string opDecodeBuffer;
-    if (isOperator) {
-                                        // abcdefghijklmnopqrstuvwxyz
-      static const char op_char_table[] = "& @/= >    <*!|+?%-~   ^ .";
-
-      opDecodeBuffer.reserve(identifier.size());
-      for (signed char c : identifier) {
-        if (c < 0) {
-          // Pass through Unicode characters.
-          opDecodeBuffer.push_back(c);
-          continue;
-        }
-        if (c < 'a' || c > 'z')
-          return nullptr;
-        char o = op_char_table[c - 'a'];
-        if (o == ' ')
-          return nullptr;
-        opDecodeBuffer.push_back(o);
-      }
-      identifier = opDecodeBuffer;
-    }
-    
-    return Factory.createNode(*kind, identifier);
   }
 
   bool demangleIndex(Node::IndexType &natural, unsigned depth) {
@@ -1584,6 +1587,7 @@ private:
   }
 
   NodePointer demangleMetatypeRepresentation(unsigned depth) {
+    (void)depth;
     if (Mangled.nextIf('t'))
       return Factory.createNode(Node::Kind::MetatypeRepresentation, "@thin");
 
@@ -2267,6 +2271,7 @@ private:
   ///
   /// Returns an empty string otherwise.
   StringRef demangleImplConvention(ImplConventionContext ctxt, unsigned depth) {
+    (void)depth;
 #define CASE(CHAR, FOR_CALLEE, FOR_PARAMETER, FOR_RESULT)            \
     if (Mangled.nextIf(CHAR)) {                                      \
       switch (ctxt) {                                                \

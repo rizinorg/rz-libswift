@@ -29,11 +29,7 @@ using namespace swift;
 using namespace Demangle;
 using llvm::StringRef;
 
-[[noreturn]]
-static void printer_unreachable(const char *Message) {
-  fprintf(stderr, "fatal error: %s\n", Message);
-  std::abort();
-}
+#define printer_unreachable(m) return nullptr
 
 DemanglerPrinter &DemanglerPrinter::operator<<(unsigned long long n) & {
   char buffer[32];
@@ -585,7 +581,8 @@ private:
     case Node::Kind::AsyncSuspendResumePartialFunction:
       return false;
     }
-    printer_unreachable("bad node kind");
+    //printer_unreachable("bad node kind");
+    return false;
   }
 
   void printWithParens(NodePointer type, unsigned depth) {
@@ -739,6 +736,7 @@ private:
     }
 
     auto getLabelFor = [&](NodePointer Param, unsigned Index) -> std::string {
+      (void)Param;
       auto Label = LabelList->getChild(Index);
       assert(Label && (Label->getKind() == Node::Kind::Identifier ||
                        Label->getKind() == Node::Kind::FirstElementMarker));
@@ -809,7 +807,7 @@ private:
       break;
     case Node::Kind::EscapingObjCBlock:
       Printer << "@escaping ";
-      LLVM_FALLTHROUGH;
+      /* fall-thru */
     case Node::Kind::ObjCBlock:
       printConventionWithMangledCType("block");
       break;
@@ -902,9 +900,9 @@ private:
           Printer << '(';
           continue;
         case Inputs: Printer << ") -> ("; continue;
-        case Results: printer_unreachable("no state after Results");
+        case Results: continue;//printer_unreachable("no state after Results");
         }
-        printer_unreachable("bad state");
+        //printer_unreachable("bad state");
       }
     };
 
@@ -2834,7 +2832,7 @@ NodePointer NodePrinter::print(NodePointer Node, unsigned depth,
     return nullptr;
   case Node::Kind::PredefinedObjCAsyncCompletionHandlerImpl:
     Printer << "predefined ";
-    LLVM_FALLTHROUGH;
+    /* fall-thru */
   case Node::Kind::ObjCAsyncCompletionHandlerImpl:
     Printer << "@objc completion handler block implementation for ";
     if (Node->getNumChildren() >= 4)

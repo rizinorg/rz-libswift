@@ -8,23 +8,23 @@
 #include "llvm/ADT/StringRef.h"
 
 namespace llvm {
-	template <typename ForwardIterator, typename UnaryFunctor,
-	          typename NullaryFunctor,
-	          typename = typename std::enable_if<
-	              !std::is_constructible<StringRef, UnaryFunctor>::value &&
-	              !std::is_constructible<StringRef, NullaryFunctor>::value>::type>
-	inline void interleave(ForwardIterator begin, ForwardIterator end,
-	                       UnaryFunctor each_fn, NullaryFunctor between_fn) {
-		if (begin == end) {
-			return;
-		}
+template <typename ForwardIterator, typename UnaryFunctor,
+	typename NullaryFunctor,
+	typename = typename std::enable_if<
+		!std::is_constructible<StringRef, UnaryFunctor>::value &&
+		!std::is_constructible<StringRef, NullaryFunctor>::value>::type>
+inline void interleave(ForwardIterator begin, ForwardIterator end,
+	UnaryFunctor each_fn, NullaryFunctor between_fn) {
+	if (begin == end) {
+		return;
+	}
+	each_fn(*begin);
+	++begin;
+	for (; begin != end; ++begin) {
+		between_fn();
 		each_fn(*begin);
-		++begin;
-		for (; begin != end; ++begin) {
-			between_fn();
-			each_fn(*begin);
-		}
 	}
 }
+} // namespace llvm
 
 #endif /* RZ_LIBSWIFT_STLEXTRAS_H */

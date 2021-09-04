@@ -9,13 +9,14 @@
 
 namespace llvm {
 
-template<typename T, typename R=T>
+template <typename T, typename R = T>
 class StringSwitch {
 	const StringRef to_compare;
 	T result;
 
-public:
-	StringSwitch(StringRef value): to_compare(value) {}
+      public:
+	StringSwitch(StringRef value)
+	    : to_compare(value) {}
 	~StringSwitch() = default;
 
 	StringSwitch &Case(const char literal[], T case_value) {
@@ -26,9 +27,9 @@ public:
 	}
 
 	R Default(T default_value) {
-    	if (result) {
+		if (result) {
 			return result;
-    	}
+		}
 		return default_value;
 	}
 
@@ -37,6 +38,6 @@ public:
 	}
 };
 
-}
+} // namespace llvm
 
 #endif /* RZ_LIBSWIFT_STRINGSWITCH_H */

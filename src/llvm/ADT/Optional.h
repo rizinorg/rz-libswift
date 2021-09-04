@@ -18,14 +18,17 @@ const NoneType None = NoneType::None;
 
 template <typename T>
 class Optional {
-private:
+      private:
 	bool has_value;
 	T value;
 
-public:
-	constexpr Optional(): has_value(false) {}
-	constexpr Optional(NoneType) {}
-	constexpr Optional(T v): has_value(true), value(v) {}
+      public:
+	constexpr Optional()
+	    : has_value(false) {}
+	constexpr Optional(NoneType)
+	    : has_value(false) {}
+	constexpr Optional(T v)
+	    : has_value(true), value(v) {}
 
 	constexpr const T &getValue() const {
 		return value;
@@ -48,6 +51,6 @@ public:
 	}
 };
 
-};
+}; // namespace llvm
 
 #endif /* RZ_LIBSWIFT_OPTIONAL_H */

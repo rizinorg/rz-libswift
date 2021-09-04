@@ -617,6 +617,7 @@ void Remangler::mangleArgumentTuple(Node *node) {
 }
 
 void Remangler::mangleAssociatedType(Node *node) {
+  (void) node;
   unreachable("unsupported node");
 }
 
@@ -853,6 +854,7 @@ void Remangler::mangleDefaultArgumentInitializer(Node *node) {
 }
 
 void Remangler::mangleAsyncFunctionPointer(Node *node) {
+  (void) node;
   Buffer << "Tu";
 }
 
@@ -891,6 +893,7 @@ void Remangler::mangleDependentGenericConformanceRequirement(Node *node) {
 }
 
 void Remangler::mangleDependentGenericParamCount(Node *node) {
+  (void) node;
   unreachable("handled inline in DependentGenericSignature");
 }
 
@@ -1000,6 +1003,7 @@ void Remangler::mangleDependentMemberType(Node *node) {
 }
 
 void Remangler::mangleDependentPseudogenericSignature(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
@@ -1022,10 +1026,12 @@ void Remangler::mangleDirectness(Node *node) {
 }
 
 void Remangler::mangleDynamicAttribute(Node *node) {
+  (void) node;
   Buffer << "TD";
 }
 
 void Remangler::mangleDirectMethodReferenceAttribute(Node *node) {
+  (void) node;
   Buffer << "Td";
 }
 
@@ -1039,6 +1045,7 @@ void Remangler::mangleEnum(Node *node) {
 }
 
 void Remangler::mangleErrorType(Node *node) {
+  (void) node;
   Buffer << "Xe";
 }
 
@@ -1254,10 +1261,12 @@ void Remangler::mangleFunctionSignatureSpecializationParam(Node *node) {
 }
 
 void Remangler::mangleFunctionSignatureSpecializationParamKind(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
 void Remangler::mangleFunctionSignatureSpecializationParamPayload(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
@@ -1341,6 +1350,7 @@ void Remangler::mangleInlinedGenericFunction(Node *node) {
 
 
 void Remangler::mangleGenericSpecializationParam(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
@@ -1412,10 +1422,12 @@ void Remangler::mangleIdentifier(Node *node) {
 }
 
 void Remangler::mangleIndex(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
 void Remangler::mangleUnknownIndex(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
@@ -1434,6 +1446,7 @@ void Remangler::mangleImplDifferentiabilityKind(Node *node) {
 }
 
 void Remangler::mangleImplEscaping(Node *node) {
+  (void) node;
   Buffer << 'e';
 }
 
@@ -1460,6 +1473,7 @@ void Remangler::mangleImplParameterResultDifferentiability(Node *node) {
 }
 
 void Remangler::mangleImplFunctionAttribute(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
@@ -1487,6 +1501,7 @@ void Remangler::mangleImplFunctionConvention(Node *node) {
 }
 
 void Remangler::mangleImplFunctionConventionName(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
@@ -1495,10 +1510,12 @@ void Remangler::mangleClangType(Node *node) {
 }
 
 void Remangler::mangleImplInvocationSubstitutions(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
 void Remangler::mangleImplPatternSubstitutions(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
@@ -1508,7 +1525,7 @@ void Remangler::mangleImplFunctionType(Node *node) {
   Node *PatternSubs = nullptr;
   Node *InvocationSubs = nullptr;
   for (NodePointer Child : *node) {
-    switch (auto kind = Child->getKind()) {
+    switch (Child->getKind()) {
     case Node::Kind::ImplParameter:
     case Node::Kind::ImplResult:
     case Node::Kind::ImplYield:
@@ -1519,7 +1536,7 @@ void Remangler::mangleImplFunctionType(Node *node) {
       break;
     case Node::Kind::DependentPseudogenericSignature:
       PseudoGeneric = "P";
-      LLVM_FALLTHROUGH;
+      /* fall-thru */
     case Node::Kind::DependentGenericSignature:
       GenSig = Child;
       break;
@@ -1599,7 +1616,7 @@ void Remangler::mangleImplFunctionType(Node *node) {
       }
       case Node::Kind::ImplYield:
         Buffer << 'Y';
-        LLVM_FALLTHROUGH;
+        /* fall-thru */
       case Node::Kind::ImplParameter: {
         // Mangle parameter convention.
         char ConvCh =
@@ -1623,7 +1640,7 @@ void Remangler::mangleImplFunctionType(Node *node) {
       }
       case Node::Kind::ImplErrorResult:
         Buffer << 'z';
-        LLVM_FALLTHROUGH;
+        /* fall-thru */
       case Node::Kind::ImplResult: {
         char ConvCh = llvm::StringSwitch<char>(Child->getFirstChild()->getText())
                         .Case("@out", 'r')
@@ -1654,18 +1671,22 @@ void Remangler::mangleImplicitClosure(Node *node) {
 }
 
 void Remangler::mangleImplParameter(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
 void Remangler::mangleImplResult(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
 void Remangler::mangleImplYield(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
 void Remangler::mangleImplErrorResult(Node *node) {
+  (void) node;
   unreachable("handled inline");
 }
 
@@ -1835,6 +1856,7 @@ void Remangler::manglePropertyDescriptor(Node *node) {
 }
 
 void Remangler::mangleNonObjCAttribute(Node *node) {
+  (void) node;
   Buffer << "TO";
 }
 
@@ -1848,6 +1870,7 @@ void Remangler::mangleNumber(Node *node) {
 }
 
 void Remangler::mangleObjCAttribute(Node *node) {
+  (void) node;
   Buffer << "To";
 }
 
@@ -1889,18 +1912,22 @@ void Remangler::manglePartialApplyObjCForwarder(Node *node) {
 }
 
 void Remangler::mangleMergedFunction(Node *node) {
+  (void) node;
   Buffer << "Tm";
 }
 
 void Remangler::mangleDynamicallyReplaceableFunctionImpl(Node *node) {
+  (void) node;
   Buffer << "TI";
 }
 
 void Remangler::mangleDynamicallyReplaceableFunctionKey(Node *node) {
+  (void) node;
   Buffer << "Tx";
 }
 
 void Remangler::mangleDynamicallyReplaceableFunctionVar(Node *node) {
+  (void) node;
   Buffer << "TX";
 }
 
@@ -2265,6 +2292,7 @@ void Remangler::mangleSpecializationPassID(Node *node) {
 }
 
 void Remangler::mangleIsSerialized(Node *node) {
+  (void) node;
   Buffer << 'q';
 }
 
@@ -2408,6 +2436,7 @@ void Remangler::mangleVariable(Node *node) {
 }
 
 void Remangler::mangleVTableAttribute(Node *node) {
+  (void) node;
   unreachable("Old-fashioned vtable thunk in new mangling format");
 }
 
@@ -2483,10 +2512,12 @@ void Remangler::mangleFullObjCResilientClassStub(Node *node) {
 }
 
 void Remangler::mangleConcurrentFunctionType(Node *node) {
+  (void) node;
   Buffer << "Yb";
 }
 
 void Remangler::mangleAsyncAnnotation(Node *node) {
+  (void) node;
   Buffer << "Ya";
 }
 
@@ -2500,18 +2531,22 @@ void Remangler::mangleGlobalActorFunctionType(Node *node) {
 }
 
 void Remangler::mangleThrowsAnnotation(Node *node) {
+  (void) node;
   Buffer << 'K';
 }
 
 void Remangler::mangleEmptyList(Node *node) {
+  (void) node;
   Buffer << 'y';
 }
 
 void Remangler::mangleFirstElementMarker(Node *node) {
+  (void) node;
   Buffer << '_';
 }
 
 void Remangler::mangleVariadicMarker(Node *node) {
+  (void) node;
   Buffer << 'd';
 }
 
@@ -2608,14 +2643,17 @@ void Remangler::mangleSILBoxTypeWithLayout(Node *node) {
 }
 
 void Remangler::mangleSILBoxLayout(Node *node) {
+  (void) node;
   unreachable("should be part of SILBoxTypeWithLayout");
 }
 
 void Remangler::mangleSILBoxMutableField(Node *node) {
+  (void) node;
   unreachable("should be part of SILBoxTypeWithLayout");
 }
 
 void Remangler::mangleSILBoxImmutableField(Node *node) {
+  (void) node;
   unreachable("should be part of SILBoxTypeWithLayout");
 }
 
@@ -2690,6 +2728,7 @@ void Remangler::mangleSugaredParen(Node *node) {
 }
 
 void Remangler::mangleOpaqueReturnType(Node *node) {
+  (void) node;
   Buffer << "Qr";
 }
 void Remangler::mangleOpaqueReturnTypeOf(Node *node) {
@@ -2718,6 +2757,7 @@ void Remangler::mangleOpaqueType(Node *node) {
   addSubstitution(entry);
 }
 void Remangler::mangleAccessorFunctionReference(Node *node) {
+  (void) node;
   unreachable("can't remangle");
 }
 
@@ -2874,7 +2914,7 @@ NodePointer Demangle::getUnspecialized(Node *node, NodeFactory &Factory) {
     case Node::Kind::PropertyWrapperInitFromProjectedValue:
     case Node::Kind::DefaultArgumentInitializer:
       NumToCopy = node->getNumChildren();
-      LLVM_FALLTHROUGH;
+      /* fall-thru */
     case Node::Kind::Structure:
     case Node::Kind::Enum:
     case Node::Kind::Class:

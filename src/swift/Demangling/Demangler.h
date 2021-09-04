@@ -204,7 +204,9 @@ public:
     if (Growth < Capacity * 2)
       Growth = Capacity * 2;
     T *NewObjects = Allocate<T>(Capacity + Growth);
-    memcpy(NewObjects, Objects, OldAllocSize);
+    if (NewObjects && Objects) {
+      memcpy(NewObjects, Objects, OldAllocSize);
+    }
     Objects = NewObjects;
     Capacity += Growth;
   }

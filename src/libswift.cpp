@@ -5,10 +5,18 @@
 #include <rz_libswift.h>
 #include "swift/Demangling/Demangle.h"
 
-char *rz_libswift_demangle_line(const char* line) {
+std::string rz_libswift_demangle_line(std::string line) {
+	return swift::Demangle::demangleSymbolAsString(line);
+}
+
+char *rz_libswift_demangle_line(const char *line) {
 	std::string symbol(line);
 
 	std::string demangled = swift::Demangle::demangleSymbolAsString(symbol);
+
+	if (demangled == symbol) {
+		return nullptr;
+	}
 
 	char *copy = strdup(demangled.c_str());
 	return copy;

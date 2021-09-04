@@ -363,104 +363,129 @@ void Remangler::mangleSuffix(Node *node) {
 }
 
 void Remangler::mangleGenericSpecialization(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleGenericSpecializationPrespecialized(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleGenericSpecializationNotReAbstracted(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleGenericSpecializationInResilienceDomain(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleInlinedGenericFunction(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleGenericPartialSpecialization(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleGenericPartialSpecializationNotReAbstracted(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleGenericSpecializationParam(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleFunctionSignatureSpecialization(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleSpecializationPassID(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleIsSerialized(Node *node) {
+  (void) node;
   Buffer << "q";
 }
 
 void Remangler::mangleFunctionSignatureSpecializationReturn(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleFunctionSignatureSpecializationParam(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleFunctionSignatureSpecializationParamPayload(Node *node) {
   // This should never be called since mangling parameter payloads require
   // knowing what the parameter kind is.
+  (void) node;
   unreachable("This should never be called");
 }
 
 void Remangler::mangleFunctionSignatureSpecializationParamKind(Node *node) {
   // This should never be called since mangling parameter kinds have influence
   // on the payloads.
+  (void) node;
   unreachable("This should never be called");
 }
 
 void Remangler::mangleRetroactiveConformance(Node *node) {
+  (void) node;
   unreachable("Retroactive conformances aren't in the old mangling");
 }
 
 void Remangler::mangleProtocolConformanceRefInTypeModule(Node *node) {
+  (void) node;
   unreachable("Protocol conformance references aren't in the old mangling");
 }
 
 void Remangler::mangleProtocolConformanceRefInProtocolModule(Node *node) {
+  (void) node;
   unreachable("Protocol conformance references aren't in the old mangling");
 }
 
 void Remangler::mangleProtocolConformanceRefInOtherModule(Node *node) {
+  (void) node;
   unreachable("Protocol conformance references aren't in the old mangling");
 }
 
 void Remangler::mangleConcreteProtocolConformance(Node *node) {
+  (void) node;
   unreachable("Concrete conformances aren't in the old mangling");
 }
 
 void Remangler::mangleAnyProtocolConformanceList(Node *node) {
+  (void) node;
   unreachable("Conformance lists aren't in the old mangling");
 }
 
 void Remangler::mangleDependentAssociatedConformance(Node *node) {
+  (void) node;
   unreachable("Dependent associated conformances aren't in the old mangling");
 }
 
 void Remangler::mangleDependentProtocolConformanceRoot(Node *node) {
+  (void) node;
   unreachable("Dependent conformances aren't in the old mangling");
 }
 
 void Remangler::mangleDependentProtocolConformanceInherited(Node *node) {
+  (void) node;
   unreachable("Dependent conformances aren't in the old mangling");
 }
 
 void Remangler::mangleDependentProtocolConformanceAssociated(Node *node) {
+  (void) node;
   unreachable("Dependent conformances aren't in the old mangling");
 }
 
@@ -473,22 +498,27 @@ void Remangler::mangleProtocolConformance(Node *node) {
 }
 
 void Remangler::mangleObjCAttribute(Node *node) {
+  (void) node;
   Buffer << "To";
 }
 
 void Remangler::mangleNonObjCAttribute(Node *node) {
+  (void) node;
   Buffer << "TO";
 }
 
 void Remangler::mangleDirectMethodReferenceAttribute(Node *node) {
+  (void) node;
   Buffer << "Td";
 }
 
 void Remangler::mangleDynamicAttribute(Node *node) {
+  (void) node;
   Buffer << "TD";
 }
 
 void Remangler::mangleVTableAttribute(Node *node) {
+  (void) node;
   Buffer << "TV";
 }
 
@@ -523,6 +553,7 @@ void Remangler::mangleTypeMetadataCompletionFunction(Node *node) {
 }
 
 void Remangler::mangleTypeMetadataDemanglingCache(Node *node) {
+  (void) node;
   unreachable("not supported");
 }
 
@@ -547,6 +578,7 @@ void Remangler::mangleNominalTypeDescriptor(Node *node) {
 }
 
 void Remangler::manglePropertyDescriptor(Node *node) {
+  (void) node;
   unreachable("not supported");
 }
 
@@ -566,10 +598,12 @@ void Remangler::mangleProtocolDescriptor(Node *node) {
 }
 
 void Remangler::mangleProtocolRequirementsBaseDescriptor(Node *node) {
+  (void) node;
   Buffer << "<protocol-requirements-base-descriptor>";
 }
 
 void Remangler::mangleProtocolWitnessTablePattern(Node *node) {
+  (void) node;
   unreachable("todo");
 }
 
@@ -594,25 +628,31 @@ void Remangler::manglePartialApplyObjCForwarder(Node *node) {
 }
 
 void Remangler::mangleMergedFunction(Node *node) {
+  (void) node;
   Buffer << "Tm";
 }
 
 void Remangler::mangleDynamicallyReplaceableFunctionImpl(Node *node) {
+  (void) node;
   Buffer << "TI";
 }
 
 void Remangler::mangleDynamicallyReplaceableFunctionKey(Node *node) {
+  (void) node;
   Buffer << "Tx";
 }
 
 void Remangler::mangleDynamicallyReplaceableFunctionVar(Node *node) {
+  (void) node;
   Buffer << "TX";
 }
 
 void Remangler::mangleAsyncAwaitResumePartialFunction(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleAsyncSuspendResumePartialFunction(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
@@ -644,14 +684,17 @@ void Remangler::mangleValueWitnessTable(Node *node) {
 }
 
 void Remangler::mangleConcurrentFunctionType(Node *node) {
+  (void) node;
   Buffer << "y";
 }
 
 void Remangler::mangleAsyncAnnotation(Node *node) {
+  (void) node;
   Buffer << "Z";
 }
 
 void Remangler::mangleThrowsAnnotation(Node *node) {
+  (void) node;
   Buffer << "z";
 }
 
@@ -690,6 +733,7 @@ void Remangler::mangleGenericProtocolWitnessTable(Node *node) {
 }
 
 void Remangler::mangleResilientProtocolWitnessTable(Node *node) {
+  (void) node;
   unreachable("todo");
 }
 
@@ -715,18 +759,22 @@ void Remangler::mangleLazyProtocolWitnessTableCacheVariable(Node *node) {
 }
 
 void Remangler::mangleAssociatedTypeDescriptor(Node *node) {
+  (void) node;
   Buffer << "<associated-type-descriptor>";
 }
 
 void Remangler::mangleAssociatedConformanceDescriptor(Node *node) {
+  (void) node;
   Buffer << "<associated-conformance-descriptor>";
 }
 
 void Remangler::mangleDefaultAssociatedConformanceAccessor(Node *node) {
+  (void) node;
   Buffer << "<default-associated-conformance-descriptor>";
 }
 
 void Remangler::mangleBaseConformanceDescriptor(Node *node) {
+  (void) node;
   Buffer << "<base-conformance-descriptor>";
 }
 
@@ -736,6 +784,7 @@ void Remangler::mangleAssociatedTypeMetadataAccessor(Node *node) {
 }
 
 void Remangler::mangleDefaultAssociatedTypeMetadataAccessor(Node *node) {
+  (void) node;
   Buffer << "<default-associated-type-metadata-accessor>";
 }
 
@@ -748,50 +797,63 @@ void Remangler::mangleAssociatedTypeWitnessTableAccessor(Node *node) {
 }
 
 void Remangler::mangleBaseWitnessTableAccessor(Node *node) {
+  (void) node;
   Buffer << "<base-witness-table-accessor>";
 }
 
 void Remangler::mangleReabstractionThunkHelper(Node *node) {
+  (void) node;
   Buffer << "<reabstraction-thunk-helper>";
 }
 
 void Remangler::mangleReabstractionThunkHelperWithSelf(Node *node) {
+  (void) node;
   Buffer << "<reabstraction-thunk-helper-with-self>";
 }
 
 void Remangler::mangleReabstractionThunk(Node *node) {
+  (void) node;
   Buffer << "<reabstraction-thunk>";
 }
 
 void Remangler::mangleReabstractionThunkHelperWithGlobalActor(Node *node) {
+  (void) node;
   Buffer << "<reabstraction-thunk-helper-with-global-actor>";
 }
 
 void Remangler::mangleAutoDiffFunction(Node *node, EntityContext &ctx) {
+  (void) node;
+  (void) ctx;
   Buffer << "<autodiff-function>";
 }
 
 void Remangler::mangleAutoDiffDerivativeVTableThunk(Node *node) {
+  (void) node;
   Buffer << "<autodiff-derivative-vtable-thunk>";
 }
 
 void Remangler::mangleAutoDiffSelfReorderingReabstractionThunk(Node *node) {
+  (void) node;
   Buffer << "<autodiff-self-reordering-reabstraction-thunk>";
 }
 
 void Remangler::mangleAutoDiffSubsetParametersThunk(Node *node) {
+  (void) node;
   Buffer << "<autodiff-subset-parameters-thunk>";
 }
 
 void Remangler::mangleAutoDiffFunctionKind(Node *node) {
+  (void) node;
   Buffer << "<autodiff-function-kind>";
 }
 
 void Remangler::mangleDifferentiabilityWitness(Node *node) {
+  (void) node;
   Buffer << "<differentiability-witness>";
 }
 
 void Remangler::mangleIndexSubset(Node *node) {
+  (void) node;
   Buffer << "<index-subset>";
 }
 
@@ -877,6 +939,7 @@ void Remangler::mangleDefaultArgumentInitializer(Node *node,
 }
 
 void Remangler::mangleAsyncFunctionPointer(Node *node) {
+  (void) node;
   Buffer << "Tu";
 }
 
@@ -1213,6 +1276,7 @@ void Remangler::mangleObjCBlock(Node *node) {
 }
 
 void Remangler::mangleEscapingObjCBlock(Node *node) {
+  (void) node;
   // We shouldn't ever be remangling anything with a DWARF-only mangling.
   Buffer << "<escaping block type>";
 }
@@ -1325,7 +1389,10 @@ void Remangler::mangleImplFunctionConventionName(Node *node) {
   }
 }
 
-void Remangler::mangleClangType(Node *node) { unreachable("unsupported"); }
+void Remangler::mangleClangType(Node *node) {
+  (void) node;
+  unreachable("unsupported");
+}
 
 void Remangler::mangleImplParameter(Node *node) {
   assert(node->getNumChildren() == 2);
@@ -1355,14 +1422,17 @@ void Remangler::mangleImplDifferentiabilityKind(Node *node) {
 }
 
 void Remangler::mangleImplEscaping(Node *node) {
+  (void) node;
   // The old mangler does not encode escaping.
 }
 
 void Remangler::mangleImplPatternSubstitutions(Node *node) {
+  (void) node;
   // The old mangler does not encode substituted function types.
 }
 
 void Remangler::mangleImplInvocationSubstitutions(Node *node) {
+  (void) node;
   // The old mangler does not encode substituted function types.
 }
 
@@ -1411,6 +1481,7 @@ void Remangler::mangleDynamicSelf(Node *node) {
 }
 
 void Remangler::mangleErrorType(Node *node) {
+  (void) node;
   Buffer << "ERR";
 }
 
@@ -1573,6 +1644,7 @@ mangle_requirements:
 }
 
 void Remangler::mangleDependentGenericParamCount(Node *node) {
+  (void) node;
   unreachable("handled inline in DependentGenericSignature");
 }
 
@@ -1756,6 +1828,7 @@ void Remangler::mangleIndex(Node *node) {
 }
 
 void Remangler::mangleUnknownIndex(Node *node) {
+  (void) node;
   unreachable("should not be reached in an arbitrary context");
 }
 
@@ -1923,62 +1996,77 @@ void Remangler::mangleLabelList(Node *node) {
 }
 
 void Remangler::mangleReflectionMetadataBuiltinDescriptor(Node *node) {
+  (void) node;
   Buffer << "MRb";
 }
 
 void Remangler::mangleReflectionMetadataFieldDescriptor(Node *node) {
+  (void) node;
   Buffer << "MRf";
 }
 
 void Remangler::mangleReflectionMetadataAssocTypeDescriptor(Node *node) {
+  (void) node;
   Buffer << "MRa";
 }
 
 void Remangler::mangleReflectionMetadataSuperclassDescriptor(Node *node) {
+  (void) node;
   Buffer << "MRc";
 }
 
 void Remangler::mangleGenericTypeParamDecl(Node *node) {
+  (void) node;
   unreachable("todo");
 }
 
 void Remangler::mangleCurryThunk(Node *node) {
+  (void) node;
   Buffer << "<curry-thunk>";
 }
 
 void Remangler::mangleDispatchThunk(Node *node) {
+  (void) node;
   Buffer << "<dispatch-thunk>";
 }
 
 void Remangler::mangleMethodDescriptor(Node *node) {
+  (void) node;
   Buffer << "<method-descriptor>";
 }
 
 void Remangler::mangleMethodLookupFunction(Node *node) {
+  (void) node;
   Buffer << "<method-lookup-function>";
 }
 
 void Remangler::mangleObjCMetadataUpdateFunction(Node *node) {
+  (void) node;
   Buffer << "<objc-metadata-update-function>";
 }
 
 void Remangler::mangleObjCResilientClassStub(Node *node) {
+  (void) node;
   Buffer << "<objc-resilient-class-stub>";
 }
 
 void Remangler::mangleFullObjCResilientClassStub(Node *node) {
+  (void) node;
   Buffer << "<full-objc-resilient-class-stub>";
 }
 
 void Remangler::mangleEmptyList(Node *node) {
+  (void) node;
   Buffer << "<empty>";
 }
 
 void Remangler::mangleFirstElementMarker(Node *node) {
+  (void) node;
   Buffer << "<first>";
 }
 
 void Remangler::mangleVariadicMarker(Node *node) {
+  (void) node;
   // Handled in mangleTuple
 }
 
@@ -2134,96 +2222,124 @@ void Remangler::mangleSILBoxImmutableField(Node *node) {
 }
 
 void Remangler::mangleAssocTypePath(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleModuleDescriptor(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleExtensionDescriptor(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleAnonymousDescriptor(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleAssociatedTypeGenericParamRef(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleTypeSymbolicReference(Node *node, EntityContext&) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleProtocolSymbolicReference(Node *node, EntityContext&) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleOpaqueTypeDescriptorSymbolicReference(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleSugaredOptional(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleSugaredArray(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleSugaredDictionary(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleSugaredParen(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 
 void Remangler::mangleOpaqueReturnType(Node *node) {
+  (void) node;
   Buffer << "Qu";
 }
 void Remangler::mangleOpaqueReturnTypeOf(Node *node, EntityContext &ctx) {
+  (void) node;
+  (void) ctx;
   unreachable("unsupported");
 }
 void Remangler::mangleOpaqueType(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleOpaqueTypeDescriptor(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleOpaqueTypeDescriptorAccessor(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleOpaqueTypeDescriptorAccessorImpl(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleOpaqueTypeDescriptorAccessorKey(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleOpaqueTypeDescriptorAccessorVar(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleAccessorFunctionReference(Node *node) {
+  (void) node;
   unreachable("can't remangle");
 }
 void Remangler::mangleMetadataInstantiationCache(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleGlobalVariableOnceToken(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleGlobalVariableOnceFunction(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleGlobalVariableOnceDeclList(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::manglePredefinedObjCAsyncCompletionHandlerImpl(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 void Remangler::mangleObjCAsyncCompletionHandlerImpl(Node *node) {
+  (void) node;
   unreachable("unsupported");
 }
 

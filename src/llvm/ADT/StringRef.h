@@ -10,25 +10,27 @@
 #include <cstring>
 #include <string>
 #include <climits>
+#include <algorithm>
 #include "Optional.h"
 
-#define LLVM_FALLTHROUGH
 #define LLVM_NODISCARD
 
 namespace llvm {
 
 class StringLiteral {
-private:
+      private:
 	const char *ptr;
 	const size_t length;
-	constexpr StringLiteral(const char *s, size_t l): ptr(s), length(l) {}
+	constexpr StringLiteral(const char *s, size_t l)
+	    : ptr(s), length(l) {}
 
-public:
+      public:
 	template <size_t T>
-	constexpr StringLiteral(const char(&s)[T]): StringLiteral(s, T - 1) {}
+	constexpr StringLiteral(const char (&s)[T])
+	    : StringLiteral(s, T - 1) {}
 
 	template <size_t T>
-	static constexpr StringLiteral withInnerNUL(const char(&s)[T]) {
+	static constexpr StringLiteral withInnerNUL(const char (&s)[T]) {
 		return StringLiteral(s, T - 1);
 	}
 
@@ -41,17 +43,26 @@ public:
 	}
 };
 
-class StringRef: public std::string {
-public:
-	StringRef(): std::string() {}
-	StringRef(const StringLiteral &s):  std::string(s.c_str(), s.size()) {}
-	StringRef(const std::string &s): std::string(s) {}
-	StringRef(const std::string &s, std::size_t n): std::string(s, n) {}
-	StringRef(const StringRef &s): std::string(s) {}
-	StringRef(const StringRef &s, std::size_t n): std::string(s, n) {}
-	StringRef(const char *s, std::size_t n): std::string(s, n) {}
-	StringRef(const char *s): std::string(s) {}
-	StringRef(std::size_t n, char c): std::string(n, c) {}
+class StringRef : public std::string {
+      public:
+	StringRef()
+	    : std::string() {}
+	StringRef(const StringLiteral &s)
+	    : std::string(s.c_str(), s.size()) {}
+	StringRef(const std::string &s)
+	    : std::string(s) {}
+	StringRef(const std::string &s, std::size_t n)
+	    : std::string(s, n) {}
+	StringRef(const StringRef &s)
+	    : std::string(s) {}
+	StringRef(const StringRef &s, std::size_t n)
+	    : std::string(s, n) {}
+	StringRef(const char *s, std::size_t n)
+	    : std::string(s, n) {}
+	StringRef(const char *s)
+	    : std::string(s) {}
+	StringRef(std::size_t n, char c)
+	    : std::string(n, c) {}
 
 	inline bool operator==(const char rhs[]) {
 		return std::string::compare(0, std::string::npos, (const char *)rhs) == 0;
@@ -61,12 +72,17 @@ public:
 		return std::string::compare(0, std::string::npos, (const char *)rhs) == 0;
 	}
 
-	inline bool operator==(const StringLiteral& rhs) {
+	inline bool operator==(const StringLiteral &rhs) {
 		return std::string::compare(0, std::string::npos, rhs.c_str()) == 0;
 	}
 
-	inline bool operator!=(const StringLiteral& rhs) {
+	inline bool operator!=(const StringLiteral &rhs) {
 		return std::string::compare(0, std::string::npos, rhs.c_str()) == 0;
+	}
+
+	StringRef &operator=(const StringRef &s) {
+		std::string::assign(s);
+		return *this;
 	}
 
 	StringRef take_back(size_t pos = 1) const {
@@ -76,7 +92,7 @@ public:
 		return std::string::substr(size() - pos);
 	}
 
-	StringRef drop_while(std:: function < bool(char) > exp, size_t beg = 0) {
+	StringRef drop_while(std::function<bool(char)> exp, size_t beg = 0) {
 		StringRef sf = std::string::substr(beg);
 		while (!sf.empty()) {
 			if (!exp(sf[0])) {
@@ -130,8 +146,8 @@ public:
 		return find(s) != std::string::npos;
 	}
 
-	bool contains(char C) const {
-		return find('[') != std::string::npos;
+	bool contains(char c) const {
+		return find(c) != std::string::npos;
 	}
 
 	bool consume_front(StringRef prefix) {
@@ -143,6 +159,6 @@ public:
 	}
 };
 
-};
+}; // namespace llvm
 
 #endif /* RZ_LIBSWIFT_STRINGREF_H */

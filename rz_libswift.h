@@ -6,13 +6,17 @@
 #define RZ_LIBSWIFT_H
 
 #ifdef __cplusplus
-extern "C" {  
-#endif  
+#include <string>
 
-char *rz_libswift_demangle_line(const char* line);
+std::string rz_libswift_demangle_line(std::string line);
 
-#ifdef __cplusplus  
-} // extern "C"  
+extern "C" {
+#endif
+
+char *rz_libswift_demangle_line(const char *line);
+
+#ifdef __cplusplus
+} // extern "C"
 #endif
 
 #endif /* RZ_LIBSWIFT_H */

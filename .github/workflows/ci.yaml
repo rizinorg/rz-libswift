@@ -13,4 +13,4 @@ jobs:
         run: |
           make all
           chmod +x ./tests.sh
-          ./tests.sh
+          ./tests.sh --ci

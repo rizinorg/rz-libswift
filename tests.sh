@@ -2,8 +2,13 @@
 
 ## https://github.com/mattgallagher/CwlDemangle/blob/master/CwlDemangle/manglings.txt
 
+IS_CI=false
+CI_HAS_FAILED=false
 RUN_ALL=false
 if [ "$1" == "--all" ]; then
+	RUN_ALL=true
+elif [ "$1" == "--ci" ]; then
+	IS_CI=true
 	RUN_ALL=true
 fi
 
@@ -12,6 +17,9 @@ test() {
 	if [ "$RET" != "$2" ]; then
 		if $RUN_ALL; then
 			echo -e "[\e[31mXX\e[0m] $1"
+			if $IS_CI; then
+				CI_HAS_FAILED=true
+			fi
 		else
 			echo "Mismatch: ./swift-demangle \"$1\""
 			echo "Input: $1"
@@ -396,3 +404,10 @@ test \$s7example1fyyYF\ -\>\ example.f\(\)\ async\ -\>\ \(\) \$s7example1fyyYF\ 
 test \$s7example1fyyYKF\ -\>\ example.f\(\)\ async\ throws\ -\>\ \(\) \$s7example1fyyYKF\ -\>\ example.f\(\)\ async\ throws\ -\>\ \(\)
 test \$s4main20receiveInstantiationyySo34__CxxTemplateInst12MagicWrapperIiEVzF main.receiveInstantiation\(inout\ __C.__CxxTemplateInst12MagicWrapperIiE\)\ -\>\ \(\)
 test \$s4main19returnInstantiationSo34__CxxTemplateInst12MagicWrapperIiEVyF main.returnInstantiation\(\)\ -\>\ __C.__CxxTemplateInst12MagicWrapperIiE
+
+
+## do not change the code below here.
+
+if $CI_HAS_FAILED; then
+	exit 1
+fi

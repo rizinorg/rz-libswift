@@ -1,0 +1,16 @@
+name: "Run tests"
+on: [push]
+
+jobs:
+  tests:
+    name: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout jsdec-test
+        uses: actions/checkout@v2
+      - name: tests
+        run: |
+          make all
+          chmod +x ./tests.sh
+          ./tests.sh --ci

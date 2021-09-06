@@ -2,8 +2,13 @@
 
 ## https://github.com/mattgallagher/CwlDemangle/blob/master/CwlDemangle/manglings.txt
 
+IS_CI=false
+CI_HAS_FAILED=false
 RUN_ALL=false
 if [ "$1" == "--all" ]; then
+	RUN_ALL=true
+elif [ "$1" == "--ci" ]; then
+	IS_CI=true
 	RUN_ALL=true
 fi
 
@@ -12,6 +17,9 @@ test() {
 	if [ "$RET" != "$2" ]; then
 		if $RUN_ALL; then
 			echo -e "[\e[31mXX\e[0m] $1"
+			if $IS_CI; then
+				CI_HAS_FAILED=true
+			fi
 		else
 			echo "Mismatch: ./swift-demangle \"$1\""
 			echo "Input: $1"
@@ -378,7 +386,7 @@ test \$S1t1PP10AssocType2_AA1QTN default\ associated\ conformance\ accessor\ for
 test \$sSD5IndexVy__GD \$sSD5IndexVy__GD
 test \$s4test3StrCACycfC test.Str.__allocating_init\(\)\ -\>\ test.Str
 test \$s18keypaths_inlinable13KeypathStructV8computedSSvpACTKq\  \$s18keypaths_inlinable13KeypathStructV8computedSSvpACTKq\ 
-test \$s18resilient_protocol24ResilientDerivedProtocolPxAA0c4BaseE0Tn\ --\>\ associated\ conformance\ descriptor\ for\ resilient_protocol.ResilientDerivedProtocol.A:\ resilient_protocol.ResilientBaseProtocol \$s18resilient_protocol24ResilientDerivedProtocolPxAA0c4BaseE0Tn\ --\>\ associated\ conformance\ descriptor\ for\ resilient_protocol.ResilientDerivedProtocol.A:\ resilient_protocol.ResilientBaseProtocol
+test \$s18resilient_protocol24ResilientDerivedProtocolPxAA0c4BaseE0Tn \$s18resilient_protocol24ResilientDerivedProtocolPxAA0c4BaseE0Tn
 test \$s3red4testyAA3ResOyxSayq_GAEs5ErrorAAq_sAFHD1__HCg_GADyxq_GsAFR_r0_lF red.test\<A\,\ B\ where\ B:\ Swift.Error\>\(red.Res\<A\,\ B\>\)\ -\>\ red.Res\<A\,\ Swift.Array\<B\>\>
 test \$s3red4testyAA7OurTypeOy4them05TheirD0Vy5AssocQzGAjE0F8ProtocolAAxAA0c7DerivedH0HD1_AA0c4BaseH0HI1_AieKHA2__HCg_GxmAaLRzlF red.test\<A\ where\ A:\ red.OurDerivedProtocol\>\(A.Type\)\ -\>\ red.OurType\<them.TheirType\<A.Assoc\>\>
 test \$s17property_wrappers10WithTuplesV9fractionsSd_S2dtvpfP property\ wrapper\ backing\ initializer\ of\ property_wrappers.WithTuples.fractions\ :\ \(Swift.Double\,\ Swift.Double\,\ Swift.Double\)
@@ -396,3 +404,10 @@ test \$s7example1fyyYF\ -\>\ example.f\(\)\ async\ -\>\ \(\) \$s7example1fyyYF\ 
 test \$s7example1fyyYKF\ -\>\ example.f\(\)\ async\ throws\ -\>\ \(\) \$s7example1fyyYKF\ -\>\ example.f\(\)\ async\ throws\ -\>\ \(\)
 test \$s4main20receiveInstantiationyySo34__CxxTemplateInst12MagicWrapperIiEVzF main.receiveInstantiation\(inout\ __C.__CxxTemplateInst12MagicWrapperIiE\)\ -\>\ \(\)
 test \$s4main19returnInstantiationSo34__CxxTemplateInst12MagicWrapperIiEVyF main.returnInstantiation\(\)\ -\>\ __C.__CxxTemplateInst12MagicWrapperIiE
+
+
+## do not change the code below here.
+
+if $CI_HAS_FAILED; then
+	exit 1
+fi

@@ -39,3 +39,11 @@ Rizin Code with License is LGPL-3-0
 * `llvm/ADT/StringRef.h: 2021 RizinOrg <info@rizin.re>`
 * `llvm/ADT/StringSwitch.h: 2021 RizinOrg <info@rizin.re>`
 
+## Building via meson
+
+
+```
+meson --buildtype=release build
+ninja -C build
+ninja -C build install
+```

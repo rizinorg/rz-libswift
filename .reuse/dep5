@@ -12,11 +12,11 @@ Copyright: 2020 RizinOrg <info@rizin.re>
 License: LGPL-3.0-only
 
 Files: Makefile
-Copyright: 2009 pancake <pancake@nopcode.org>
+Copyright: 2021 RizinOrg <info@rizin.re>
 License: LGPL-3.0-only
 
 Files: tests.sh
-Copyright: 2009 pancake <pancake@nopcode.org>
+Copyright: 2021 RizinOrg <info@rizin.re>
 License: LGPL-3.0-only
 
 Files: .gitignore
@@ -25,6 +25,10 @@ License: LGPL-3.0-only
 
 Files: meson.build
 Copyright: 2021 RizinOrg <info@rizin.re>
+License: LGPL-3.0-only
+
+Files: meson_options.txt
+Copyright: 2020 RizinOrg <info@rizin.re>
 License: LGPL-3.0-only
 
 Files: *.md

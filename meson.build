@@ -1,5 +1,5 @@
 project('libswift', 'cpp',
-  version: 'v0.1.0-git',
+  version: '0.2.0',
   # Apple library files are Apache 2.0 licensed.
   # library wrapping for rizin is LGPL v3.
   license: ['LGPL3', 'Apache-2.0'],
@@ -7,6 +7,7 @@ project('libswift', 'cpp',
   meson_version: '>=0.55.0')
 
 libswift_src = [
+    'rz_libswift.cpp',
     'src/libswift.cpp',
     'src/Context.cpp',
     'src/Demangler.cpp',
@@ -19,9 +20,40 @@ libswift_src = [
     'src/Remangler.cpp'
 ]
 
-warning_flags = []
-
+rizin = find_program('rizin', required: false)
 cxx_cc = meson.get_compiler('cpp')
+
+rizin_incdir = get_option('rizin_incdir')
+if rizin_incdir == '' and rizin.found()
+  rizin_incdir = run_command(rizin, '-H', 'RZ_INCDIR').stdout().strip()
+endif
+
+rizin_libdir = get_option('rizin_libdir')
+if rizin_libdir == '' and rizin.found()
+  rizin_libdir = run_command(rizin, '-H', 'RZ_LIBDIR').stdout().strip()
+endif
+
+rizin_plugdir = get_option('rizin_plugdir')
+if rizin_plugdir == '' and rizin.found()
+  rizin_plugdir = run_command(rizin, '-H', 'RZ_USER_PLUGINS').stdout().strip()
+  if rizin_plugdir == ''
+    rizin_plugdir = get_option('libdir')
+  endif
+endif
+
+warning_flags = []
+libswift_deps = []
+libswift_incs = ['.', 'src']
+
+if rizin_libdir != ''
+  libswift_deps += cxx_cc.find_library('rz_util', dirs: rizin_libdir)
+  libswift_deps += cxx_cc.find_library('rz_demangler', dirs: rizin_libdir)
+endif
+
+if rizin_incdir != ''
+  libswift_incs += rizin_incdir
+  libswift_incs += rizin_incdir + '/sdb'
+endif
 
 if cxx_cc.has_argument('-std=gnu++11')
   warning_flags += '-std=gnu++11'
@@ -39,12 +71,10 @@ if cxx_cc.has_argument('-Wc++11-extensions')
   warning_flags += '-Wc++11-extensions'
 endif
 
-libswift = library('swift', libswift_src,
-    c_args : warning_flags,
-    cpp_args : warning_flags,
-    include_directories: include_directories('src'))
-
-libswift_dep = declare_dependency(
-    link_with: libswift,
-    include_directories: include_directories('.'),
+shared_library('swift', libswift_src,
+  dependencies: libswift_deps,
+  include_directories: include_directories(libswift_incs),
+  implicit_include_directories: false,
+  install: true,
+  install_dir: rizin_plugdir
 )

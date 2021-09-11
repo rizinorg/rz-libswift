@@ -1,0 +1,3 @@
+option('rizin_libdir', type: 'string', value: '')
+option('rizin_incdir', type: 'string', value: '')
+option('rizin_plugdir', type: 'string', value: '')

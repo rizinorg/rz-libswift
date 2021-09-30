@@ -24,7 +24,10 @@ static RzDemanglerPlugin libswift_demangler = {
 	.demangle = &libswift_demangle_handler
 };
 
-#ifdef _MSC_VER
+
+#if defined(__GNUC__) && __GNUC__ >= 4
+#define _RZ_API __attribute__((visibility("default")))
+#elif defined(_MSC_VER)
 #define _RZ_API __declspec(dllexport)
 #else
 #define _RZ_API

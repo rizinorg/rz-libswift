@@ -1,5 +1,5 @@
 project('libswift', 'cpp',
-  version: '0.2.0',
+  version: '0.3.0',
   # Apple library files are Apache 2.0 licensed.
   # library wrapping for rizin is LGPL v3.
   license: ['LGPL3', 'Apache-2.0'],
@@ -55,20 +55,22 @@ if rizin_incdir != ''
   libswift_incs += rizin_incdir + '/sdb'
 endif
 
-if cxx_cc.has_argument('-std=gnu++11')
-  warning_flags += '-std=gnu++11'
-elif cxx_cc.has_argument('-std=c++11')
-  warning_flags += '-std=c++11'
-endif
-
 if cxx_cc.has_argument('-Wno-maybe-uninitialized')
-  warning_flags += '-Wno-maybe-uninitialized'
+  add_project_arguments('-Wno-maybe-uninitialized', language: ['cpp'])
 elif cxx_cc.has_argument('-Wno-uninitialized')
-  warning_flags += '-Wno-uninitialized'
+  add_project_arguments('-Wno-uninitialized', language: ['cpp'])
 endif
 
 if cxx_cc.has_argument('-Wc++11-extensions')
-  warning_flags += '-Wc++11-extensions'
+  add_project_arguments('-Wc++11-extensions', language: ['cpp'])
+endif
+
+if cxx_cc.has_argument('-Wc++11-extensions')
+  add_project_arguments('-Wc++11-extensions', language: ['cpp'])
+endif
+
+if cxx_cc.has_argument('-fvisibility=hidden')
+  add_project_arguments('-fvisibility=hidden', language: ['cpp'])
 endif
 
 shared_library('swift', libswift_src,

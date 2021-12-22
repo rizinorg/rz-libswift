@@ -1,5 +1,5 @@
 project('libswift', 'cpp',
-  version: '0.3.0',
+  version: '0.4.0',
   # Apple library files are Apache 2.0 licensed.
   # library wrapping for rizin is LGPL v3.
   license: ['LGPL3', 'Apache-2.0'],
@@ -23,37 +23,19 @@ libswift_src = [
 rizin = find_program('rizin', required: false)
 cxx_cc = meson.get_compiler('cpp')
 
-rizin_incdir = get_option('rizin_incdir')
-if rizin_incdir == '' and rizin.found()
-  rizin_incdir = run_command(rizin, '-H', 'RZ_INCDIR').stdout().strip()
-endif
-
-rizin_libdir = get_option('rizin_libdir')
-if rizin_libdir == '' and rizin.found()
-  rizin_libdir = run_command(rizin, '-H', 'RZ_LIBDIR').stdout().strip()
-endif
+rz_demangler_dep = dependency('rz_demangler')
 
 rizin_plugdir = get_option('rizin_plugdir')
-if rizin_plugdir == '' and rizin.found()
-  rizin_plugdir = run_command(rizin, '-H', 'RZ_USER_PLUGINS').stdout().strip()
-  if rizin_plugdir == ''
-    rizin_plugdir = get_option('libdir')
-  endif
+if rizin_plugdir == ''
+  rizin_plugdir = rz_demangler_dep.get_variable(pkgconfig: 'plugindir', cmake: 'rz_demangler_PLUGINDIR')
 endif
 
 warning_flags = []
 libswift_deps = []
 libswift_incs = ['.', 'src']
 
-if rizin_libdir != ''
-  libswift_deps += cxx_cc.find_library('rz_util', dirs: rizin_libdir)
-  libswift_deps += cxx_cc.find_library('rz_demangler', dirs: rizin_libdir)
-endif
-
-if rizin_incdir != ''
-  libswift_incs += rizin_incdir
-  libswift_incs += rizin_incdir + '/sdb'
-endif
+libswift_deps += dependency('rz_util')
+libswift_deps += rz_demangler_dep
 
 if cxx_cc.has_argument('-Wno-maybe-uninitialized')
   add_project_arguments('-Wno-maybe-uninitialized', language: ['cpp'])

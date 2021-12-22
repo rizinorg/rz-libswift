@@ -55,6 +55,10 @@ if cxx_cc.has_argument('-fvisibility=hidden')
   add_project_arguments('-fvisibility=hidden', language: ['cpp'])
 endif
 
+if cxx_cc.has_argument('/EHsc')
+  add_project_arguments('/EHsc', language: ['cpp'])
+endif
+
 shared_library('swift', libswift_src,
   dependencies: libswift_deps,
   include_directories: include_directories(libswift_incs),

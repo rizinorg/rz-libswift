@@ -18,12 +18,11 @@ static char *libswift_demangle_handler(const char *symbol) {
 }
 
 static RzDemanglerPlugin libswift_demangler = {
-	.language = "swift",
-	.author = "Apple Inc.",
-	.license = "Apache2",
-	.demangle = &libswift_demangle_handler
+	/* .language = */ "swift",
+	/* .author = */ "Apple Inc.",
+	/* .license = */ "Apache2",
+	/* .demangle = */ &libswift_demangle_handler
 };
-
 
 #if defined(__GNUC__) && __GNUC__ >= 4
 #define _RZ_API __attribute__((visibility("default")))
@@ -34,8 +33,9 @@ static RzDemanglerPlugin libswift_demangler = {
 #endif
 
 _RZ_API RzLibStruct rizin_plugin = {
-	.type = RZ_LIB_TYPE_DEMANGLER,
-	.data = &libswift_demangler,
-	.version = RZ_VERSION,
-	.pkgname = "libswift"
+	/* .type = */ RZ_LIB_TYPE_DEMANGLER,
+	/* .data = */ &libswift_demangler,
+	/* .version = */ RZ_VERSION,
+	/* .free = */ nullptr,
+	/* .pkgname = */ "libswift"
 };

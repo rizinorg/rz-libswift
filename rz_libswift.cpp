@@ -7,6 +7,10 @@
 #include <rz_lib.h>
 #include <rz_demangler.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static char *libswift_demangle_handler(const char *symbol) {
 	if (RZ_STR_ISEMPTY(symbol)) {
 		return NULL;
@@ -39,3 +43,7 @@ _RZ_API RzLibStruct rizin_plugin = {
 	/* .free = */ nullptr,
 	/* .pkgname = */ "libswift"
 };
+
+#ifdef __cplusplus
+}
+#endif

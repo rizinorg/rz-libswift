@@ -41,7 +41,6 @@ _RZ_API RzLibStruct rizin_plugin = {
 	/* .data = */ &libswift_demangler,
 	/* .version = */ RZ_VERSION,
 	/* .free = */ nullptr,
-	/* .pkgname = */ "libswift"
 };
 
 #ifdef __cplusplus

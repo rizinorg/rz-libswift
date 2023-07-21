@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-static char *libswift_demangle_handler(const char *symbol) {
+static char *libswift_demangle_handler(const char *symbol, RzDemanglerFlag flags) {
 	if (RZ_STR_ISEMPTY(symbol)) {
 		return NULL;
 	}

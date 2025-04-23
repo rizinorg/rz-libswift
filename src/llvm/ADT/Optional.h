@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2021 RizinOrg <info@rizin.re>
-// SPDX-FileCopyrightText: 2021 deroad <wargio@libero.it>
+// SPDX-FileCopyrightText: 2021 deroad <deroad@kumo.xn--q9jyb4c>
 // SPDX-License-Identifier: LGPL-3.0-only
 
 #ifndef RZ_LIBSWIFT_OPTIONAL_H
@@ -19,27 +19,35 @@ const NoneType None = NoneType::None;
 template <typename T>
 class Optional {
       private:
-	bool has_value;
-	T value;
+	bool _has_value;
+	T _value;
 
       public:
 	constexpr Optional()
-	    : has_value(false) {}
+	    : _has_value(false) {}
 	constexpr Optional(NoneType)
-	    : has_value(false) {}
+	    : _has_value(false) {}
 	constexpr Optional(T v)
-	    : has_value(true), value(v) {}
+	    : _has_value(true), _value(v) {}
 
 	constexpr const T &getValue() const {
-		return value;
+		return _value;
+	}
+
+	constexpr const T &value() const {
+		return _value;
 	}
 
 	constexpr T *getPointer() const {
-		return &value;
+		return &_value;
 	}
 
 	constexpr bool hasValue() const {
-		return has_value;
+		return _has_value;
+	}
+
+	constexpr bool has_value() const {
+		return _has_value;
 	}
 
 	constexpr const T &operator*() const {

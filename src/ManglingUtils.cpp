@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2014-2017 Apple Inc. <info@apple.com>
+// SPDX-FileCopyrightText: 2014-2024 Apple Inc. <info@apple.com>
 // SPDX-License-Identifier: Apache-2.0
 
 //===--- ManglingUtils.cpp - Utilities for Swift name mangling ------------===//
@@ -28,9 +28,16 @@ bool Mangle::isNonAscii(StringRef str) {
 }
 
 bool Mangle::needsPunycodeEncoding(StringRef str) {
-  for (unsigned char c : str) {
-    if (!isValidSymbolChar(c))
+  if (str.empty()) {
+    return false;
+  }
+  if (!isValidSymbolStart(str.front())) {
+    return true;
+  }
+  for (unsigned char c : str.substr(1)) {
+    if (!isValidSymbolChar(c)) {
       return true;
+    }
   }
   return false;
 }
@@ -69,19 +76,20 @@ std::string Mangle::translateOperator(StringRef Op) {
   return Encoded;
 }
 
-llvm::Optional<StringRef> Mangle::getStandardTypeSubst(StringRef TypeName) {
+llvm::Optional<StringRef>
+Mangle::getStandardTypeSubst(StringRef TypeName,
+                             bool allowConcurrencyManglings) {
 #define STANDARD_TYPE(KIND, MANGLING, TYPENAME)      \
   if (TypeName == #TYPENAME) {                       \
     return StringRef(#MANGLING);                     \
   }
 
-#define STANDARD_TYPE_2(KIND, MANGLING, TYPENAME)    \
-  if (TypeName == #TYPENAME) {                       \
-    return StringRef("c" #MANGLING);                 \
+#define STANDARD_TYPE_CONCURRENCY(KIND, MANGLING, TYPENAME)    \
+  if (allowConcurrencyManglings && TypeName == #TYPENAME) {    \
+    return StringRef("c" #MANGLING);                           \
   }
 
 #include "swift/Demangling/StandardTypesMangling.def"
 
   return llvm::None;
 }
-

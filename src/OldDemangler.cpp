@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2014-2017 Apple Inc. <info@apple.com>
+// SPDX-FileCopyrightText: 2014-2024 Apple Inc. <info@apple.com>
 // SPDX-License-Identifier: Apache-2.0
 
 //===--- OldDemangler.cpp - Old Swift Demangling --------------------------===//
@@ -21,13 +21,12 @@
 #include "swift/Demangling/Demangler.h"
 #include "swift/Demangling/ManglingMacros.h"
 #include "swift/Demangling/ManglingUtils.h"
-#include "swift/Strings.h"
 #include "swift/Demangling/Punycode.h"
-#include "llvm/ADT/Optional.h"
-#include <functional>
-#include <vector>
+#include "swift/Strings.h"
 #include <cstdio>
 #include <cstdlib>
+#include <functional>
+#include <vector>
 
 using namespace swift;
 using namespace Demangle;
@@ -128,7 +127,7 @@ public:
 
   /// Claim the next few characters if they exactly match the given string.
   bool nextIf(StringRef str) {
-    if (!Text.startswith(str)) return false;
+    if (!Text.starts_with(str)) return false;
     advanceOffset(str.size());
     return true;
   }
@@ -154,11 +153,11 @@ public:
 
   bool readUntil(char c, std::string &result) {
     llvm::Optional<char> c2;
-    while (!isEmpty() && (c2 = peek()).getValue() != c) {
-      result.push_back(c2.getValue());
+    while (!isEmpty() && (c2 = peek()).value() != c) {
+      result.push_back(c2.value());
       advanceOffset(1);
     }
-    return c2.hasValue() && c2.getValue() == c;
+    return c2.has_value() && c2.value() == c;
   }
 };
 
@@ -189,7 +188,7 @@ public:
 #define DEMANGLE_CHILD_AS_NODE_OR_RETURN(PARENT, CHILD_KIND, DEPTH)            \
   do {                                                                         \
     auto _kind = demangle##CHILD_KIND(DEPTH);                                  \
-    if (!_kind.hasValue())                                                     \
+    if (!_kind.has_value())                                                     \
       return nullptr;                                                          \
     addChild(PARENT,                                                           \
              Factory.createNode(Node::Kind::CHILD_KIND, unsigned(*_kind)));    \
@@ -257,7 +256,6 @@ private:
   }
 
   llvm::Optional<Directness> demangleDirectness(unsigned depth) {
-    (void)depth;
     if (Mangled.nextIf('d'))
       return Directness::Direct;
     if (Mangled.nextIf('i'))
@@ -266,7 +264,6 @@ private:
   }
 
   bool demangleNatural(Node::IndexType &num, unsigned depth) {
-    (void)depth;
     if (!Mangled)
       return false;
     char c = Mangled.next();
@@ -296,7 +293,6 @@ private:
   }
 
   llvm::Optional<ValueWitnessKind> demangleValueWitnessKind(unsigned depth) {
-    (void)depth;
     char Code[2];
     if (!Mangled)
       return llvm::None;
@@ -383,12 +379,12 @@ private:
     // Value witnesses.
     if (Mangled.nextIf('w')) {
       llvm::Optional<ValueWitnessKind> w = demangleValueWitnessKind(depth + 1);
-      if (!w.hasValue())
+      if (!w.has_value())
         return nullptr;
       auto witness =
         Factory.createNode(Node::Kind::ValueWitness);
       NodePointer Idx = Factory.createNode(Node::Kind::Index,
-                                           unsigned(w.getValue()));
+                                           unsigned(w.value()));
       witness->addChild(Idx, Factory);
       DEMANGLE_CHILD_OR_RETURN(witness, Type, depth + 1);
       return witness;
@@ -512,87 +508,6 @@ private:
     }
 
     return specialization;
-  }
-
-  NodePointer demangleIdentifier(unsigned depth,
-                                 llvm::Optional<Node::Kind> kind = llvm::None) {
-    if (!Mangled)
-      return nullptr;
-    
-    bool isPunycoded = Mangled.nextIf('X');
-    std::string decodeBuffer;
-
-    auto decode = [&](StringRef s) -> StringRef {
-      if (!isPunycoded)
-        return s;
-      if (!Punycode::decodePunycodeUTF8(s, decodeBuffer))
-        return {};
-      return decodeBuffer;
-    };
-    
-    bool isOperator = false;
-    if (Mangled.nextIf('o')) {
-      isOperator = true;
-      // Operator identifiers aren't valid in the contexts that are
-      // building more specific identifiers.
-      if (kind.hasValue()) return nullptr;
-
-      char op_mode = Mangled.next();
-      switch (op_mode) {
-      case 'p':
-        kind = Node::Kind::PrefixOperator;
-        break;
-      case 'P':
-        kind = Node::Kind::PostfixOperator;
-        break;
-      case 'i':
-        kind = Node::Kind::InfixOperator;
-        break;
-      default:
-        return nullptr;
-      }
-    }
-
-    if (!kind.hasValue()) kind = Node::Kind::Identifier;
-
-    Node::IndexType length;
-    if (!demangleNatural(length, depth + 1))
-      return nullptr;
-    if (!Mangled.hasAtLeast(length))
-      return nullptr;
-    
-    StringRef identifier = Mangled.slice(length);
-    Mangled.advanceOffset(length);
-    
-    // Decode Unicode identifiers.
-    identifier = decode(identifier);
-    if (identifier.empty())
-      return nullptr;
-
-    // Decode operator names.
-    std::string opDecodeBuffer;
-    if (isOperator) {
-                                        // abcdefghijklmnopqrstuvwxyz
-      static const char op_char_table[] = "& @/= >    <*!|+?%-~   ^ .";
-
-      opDecodeBuffer.reserve(identifier.size());
-      for (signed char c : identifier) {
-        if (c < 0) {
-          // Pass through Unicode characters.
-          opDecodeBuffer.push_back(c);
-          continue;
-        }
-        if (c < 'a' || c > 'z')
-          return nullptr;
-        char o = op_char_table[c - 'a'];
-        if (o == ' ')
-          return nullptr;
-        opDecodeBuffer.push_back(o);
-      }
-      identifier = opDecodeBuffer;
-    }
-    
-    return Factory.createNode(*kind, identifier);
   }
 
 /// TODO: This is an atrocity. Come up with a shorter name.
@@ -732,6 +647,11 @@ private:
         if (!result)
           return nullptr;
         param->addChild(result, Factory);
+      } else if (Mangled.nextIf("r_")) {
+        auto result = FUNCSIGSPEC_CREATE_PARAM_KIND(InOutToOut);
+        if (!result)
+          return nullptr;
+        param->addChild(result, Factory);
       } else {
         // Otherwise handle option sets.
         unsigned Value = 0;
@@ -848,6 +768,88 @@ private:
 
     // decl-name ::= identifier
     return demangleIdentifier(depth + 1);
+  }
+
+  NodePointer
+  demangleIdentifier(unsigned depth,
+                     llvm::Optional<Node::Kind> kind = llvm::None) {
+    if (!Mangled)
+      return nullptr;
+    
+    bool isPunycoded = Mangled.nextIf('X');
+    std::string decodeBuffer;
+
+    auto decode = [&](StringRef s) -> StringRef {
+      if (!isPunycoded)
+        return s;
+      if (!Punycode::decodePunycodeUTF8(s, decodeBuffer))
+        return {};
+      return decodeBuffer;
+    };
+    
+    bool isOperator = false;
+    if (Mangled.nextIf('o')) {
+      isOperator = true;
+      // Operator identifiers aren't valid in the contexts that are
+      // building more specific identifiers.
+      if (kind.has_value()) return nullptr;
+
+      char op_mode = Mangled.next();
+      switch (op_mode) {
+      case 'p':
+        kind = Node::Kind::PrefixOperator;
+        break;
+      case 'P':
+        kind = Node::Kind::PostfixOperator;
+        break;
+      case 'i':
+        kind = Node::Kind::InfixOperator;
+        break;
+      default:
+        return nullptr;
+      }
+    }
+
+    if (!kind.has_value()) kind = Node::Kind::Identifier;
+
+    Node::IndexType length;
+    if (!demangleNatural(length, depth + 1))
+      return nullptr;
+    if (!Mangled.hasAtLeast(length))
+      return nullptr;
+    
+    StringRef identifier = Mangled.slice(length);
+    Mangled.advanceOffset(length);
+    
+    // Decode Unicode identifiers.
+    identifier = decode(identifier);
+    if (identifier.empty())
+      return nullptr;
+
+    // Decode operator names.
+    std::string opDecodeBuffer;
+    if (isOperator) {
+                                        // abcdefghijklmnopqrstuvwxyz
+      static const char op_char_table[] = "& @/= >    <*!|+?%-~   ^ .";
+
+      opDecodeBuffer.reserve(identifier.size());
+      for (signed char c : identifier) {
+        if (c < 0) {
+          // Pass through Unicode characters.
+          opDecodeBuffer.push_back(c);
+          continue;
+        }
+        if (c < 'a' || c > 'z')
+          return nullptr;
+        char o = op_char_table[c - 'a'];
+        if (o == ' ')
+          return nullptr;
+        opDecodeBuffer.push_back(o);
+      }
+      identifier = opDecodeBuffer;
+    }
+    
+    return Factory.createNode(*kind, identifier);
   }
 
   bool demangleIndex(Node::IndexType &natural, unsigned depth) {
@@ -1045,7 +1047,8 @@ private:
       // had its generic arguments applied.
       NodePointer result = Factory.createNode(nominalType->getKind());
       result->addChild(parentOrModule, Factory);
-      result->addChild(nominalType->getChild(1), Factory);
+      for (unsigned ndx = 1; ndx < nominalType->getNumChildren(); ++ndx)
+        result->addChild(nominalType->getChild(ndx), Factory);
 
       nominalType = result;
     }
@@ -1211,6 +1214,9 @@ private:
     NodePointer name = nullptr;
     if (Mangled.nextIf('D')) {
       entityKind = Node::Kind::Deallocator;
+      hasType = false;
+    } else if (Mangled.nextIf('Z')) {
+      entityKind = Node::Kind::IsolatedDeallocator;
       hasType = false;
     } else if (Mangled.nextIf('d')) {
       entityKind = Node::Kind::Destructor;
@@ -1587,7 +1593,6 @@ private:
   }
 
   NodePointer demangleMetatypeRepresentation(unsigned depth) {
-    (void)depth;
     if (Mangled.nextIf('t'))
       return Factory.createNode(Node::Kind::MetatypeRepresentation, "@thin");
 
@@ -1633,6 +1638,9 @@ private:
       } else if (Mangled.nextIf('T')) {
         kind = Node::Kind::Identifier;
         name = "T";
+      } else if (Mangled.nextIf('B')) {
+        kind = Node::Kind::Identifier;
+        name = "B";
       } else if (Mangled.nextIf('E')) {
         kind = Node::Kind::Identifier;
         if (!demangleNatural(size, depth + 1))
@@ -1661,6 +1669,11 @@ private:
         if (!demangleNatural(size, depth + 1))
           return nullptr;
         name = "m";
+      } else if (Mangled.nextIf('S')) {
+        kind = Node::Kind::Identifier;
+        if (!demangleNatural(size, depth + 1))
+          return nullptr;
+        name = "S";
       } else {
         return nullptr;
       }
@@ -1852,6 +1865,7 @@ private:
       globalActorNode->addChild(globalActorType, Factory);
       block->addChild(globalActorNode, Factory);
     }
+    // Is there any need to handle isolated(any) function types here?
 
     NodePointer in_node = Factory.createNode(Node::Kind::ArgumentTuple);
     block->addChild(in_node, Factory);
@@ -2085,6 +2099,16 @@ private:
         // Special mangling for opaque return type.
         return Factory.createNode(Node::Kind::OpaqueReturnType);
       }
+      if (Mangled.nextIf('U')) {
+        // Special mangling for opaque return type.
+        Node::IndexType ordinal;
+        if (!demangleIndex(ordinal, depth))
+          return nullptr;
+        auto result = Factory.createNode(Node::Kind::OpaqueReturnType);
+        result->addChild(
+          Factory.createNode(Node::Kind::OpaqueReturnTypeIndex, ordinal), Factory);
+        return result;
+      }
       return demangleArchetypeType(depth + 1);
     }
     if (c == 'q') {
@@ -2231,7 +2255,7 @@ private:
       addImplFunctionAttribute(type, "@async");
 
     // Enter a new generic context if this type is generic.
-    // FIXME: replace with std::optional, when we have it.
+    // FIXME: replace with llvm::Optional, when we have it.
     bool isPseudogeneric = false;
     if (Mangled.nextIf('G') ||
         (isPseudogeneric = Mangled.nextIf('g'))) {
@@ -2271,7 +2295,6 @@ private:
   ///
   /// Returns an empty string otherwise.
   StringRef demangleImplConvention(ImplConventionContext ctxt, unsigned depth) {
-    (void)depth;
 #define CASE(CHAR, FOR_CALLEE, FOR_PARAMETER, FOR_RESULT)            \
     if (Mangled.nextIf(CHAR)) {                                      \
       switch (ctxt) {                                                \

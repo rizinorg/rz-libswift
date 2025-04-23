@@ -816,6 +816,7 @@ private:
     }
 
     auto getLabelFor = [&](NodePointer Param, unsigned Index) -> std::string {
+      (void)Param;
       auto Label = LabelList->getChild(Index);
       assert(Label && (Label->getKind() == Node::Kind::Identifier ||
                        Label->getKind() == Node::Kind::FirstElementMarker));

@@ -886,7 +886,7 @@ private:
       break;
     case Node::Kind::EscapingObjCBlock:
       Printer << "@escaping ";
-      // LLVM_FALLTHROUGH;
+      // fall through
     case Node::Kind::ObjCBlock:
       printConventionWithMangledCType("block");
       break;
@@ -3384,7 +3384,7 @@ NodePointer NodePrinter::print(NodePointer Node, unsigned depth,
     return nullptr;
   case Node::Kind::PredefinedObjCAsyncCompletionHandlerImpl:
     Printer << "predefined ";
-    // LLVM_FALLTHROUGH;
+    // fall through
   case Node::Kind::ObjCAsyncCompletionHandlerImpl:
     Printer << "@objc completion handler block implementation for ";
     if (Node->getNumChildren() >= 4)

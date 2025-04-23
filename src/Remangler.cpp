@@ -2041,7 +2041,7 @@ ManglingError Remangler::mangleImplFunctionType(Node *node, unsigned depth) {
       break;
     case Node::Kind::DependentPseudogenericSignature:
       PseudoGeneric = "P";
-      // LLVM_FALLTHROUGH;
+      // fall through
     case Node::Kind::DependentGenericSignature:
       GenSig = Child;
       break;
@@ -2147,7 +2147,7 @@ ManglingError Remangler::mangleImplFunctionType(Node *node, unsigned depth) {
       }
       case Node::Kind::ImplYield:
         Buffer << 'Y';
-        // LLVM_FALLTHROUGH;
+        // fall through
       case Node::Kind::ImplParameter: {
         // Mangle parameter convention.
         char ConvCh =
@@ -2185,7 +2185,7 @@ ManglingError Remangler::mangleImplFunctionType(Node *node, unsigned depth) {
       }
       case Node::Kind::ImplErrorResult:
         Buffer << 'z';
-        // LLVM_FALLTHROUGH;
+        // fall through
       case Node::Kind::ImplResult: {
         char ConvCh = llvm::StringSwitch<char>(Child->getFirstChild()->getText())
                         .Case("@out", 'r')
@@ -4191,7 +4191,7 @@ ManglingErrorOr<NodePointer> Demangle::getUnspecialized(Node *node,
     case Node::Kind::DefaultArgumentInitializer:
     case Node::Kind::Static:
       NumToCopy = node->getNumChildren();
-      // LLVM_FALLTHROUGH;
+      // fall through
     case Node::Kind::Structure:
     case Node::Kind::Enum:
     case Node::Kind::Class:

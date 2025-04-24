@@ -20,6 +20,8 @@ test() {
 			if $IS_CI; then
 				CI_HAS_FAILED=true
 			fi
+			echo "Got: $RET"
+			echo "Exp: $2"
 		else
 			echo "Mismatch: ./swift-demangle \"$1\""
 			echo "Input: $1"

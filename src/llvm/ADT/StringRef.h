@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 RizinOrg <info@rizin.re>
-// SPDX-FileCopyrightText: 2021 deroad <wargio@libero.it>
+// SPDX-FileCopyrightText: 2021-2025 RizinOrg <info@rizin.re>
+// SPDX-FileCopyrightText: 2021-2025 deroad <deroad@kumo.xn--q9jyb4c>
 // SPDX-License-Identifier: LGPL-3.0-only
 
 #ifndef RZ_LIBSWIFT_STRINGREF_H
@@ -14,6 +14,7 @@
 #include "Optional.h"
 
 #define LLVM_NODISCARD
+#define llvm_unreachable(x) assert(false && (x))
 
 namespace llvm {
 
@@ -103,6 +104,10 @@ class StringRef : public std::string {
 		return std::string::substr(npos);
 	}
 
+	StringRef drop_back(size_t N = 1) const {
+		return std::string::substr(0, size()-N);
+	}
+
 	StringRef slice(size_t beg, size_t end) const {
 		beg = std::min(beg, std::string::length());
 		end = std::min(std::max(beg, end), std::string::length());
@@ -113,7 +118,7 @@ class StringRef : public std::string {
 		if (empty()) {
 			return StringRef();
 		}
-		return StringRef(c_str(), length());
+		return StringRef(str());
 	}
 
 	bool startswith(StringRef prefix) const {
@@ -123,11 +128,19 @@ class StringRef : public std::string {
 		return std::string::rfind(prefix, 0) == 0;
 	}
 
+	bool starts_with(StringRef prefix) const {
+		return startswith(prefix);
+	}
+
 	bool endswith(StringRef suffix) const {
 		if (suffix.length() > length()) {
 			return false;
 		}
 		return std::string::compare(length() - suffix.length(), suffix.length(), suffix) == 0;
+	}
+
+	bool ends_with(StringRef suffix) const {
+		return endswith(suffix);
 	}
 
 	StringRef substr(size_t beg, size_t end = std::string::npos) const {

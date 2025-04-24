@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2014-2017 Apple Inc. <info@apple.com>
+// SPDX-FileCopyrightText: 2014-2024 Apple Inc. <info@apple.com>
 // SPDX-License-Identifier: Apache-2.0
 
 //===--- ManglingUtils.h - Utilities for Swift name mangling ----*- C++ -*-===//
@@ -16,9 +16,9 @@
 #ifndef SWIFT_DEMANGLING_MANGLINGUTILS_H
 #define SWIFT_DEMANGLING_MANGLINGUTILS_H
 
-#include "llvm/ADT/StringRef.h"
 #include "swift/Demangling/NamespaceMacros.h"
 #include "swift/Demangling/Punycode.h"
+#include "llvm/ADT/StringRef.h"
 
 namespace swift {
 namespace Mangle {
@@ -60,10 +60,16 @@ inline bool isWordEnd(char ch, char prevCh) {
   return false;
 }
 
+/// Returns true if \p ch is a valid character which may appear at the start
+/// of a symbol mangling.
+inline bool isValidSymbolStart(char ch) {
+  return isLetter(ch) || ch == '_' || ch == '$';
+}
+
 /// Returns true if \p ch is a valid character which may appear in a symbol
-/// mangling.
+/// mangling anywhere other than the first character.
 inline bool isValidSymbolChar(char ch) {
-  return isLetter(ch) || isDigit(ch) || ch == '_' || ch == '$';
+  return isValidSymbolStart(ch) || isDigit(ch);
 }
 
 /// Returns true if \p str contains any character which may not appear in a
@@ -102,7 +108,12 @@ char translateOperatorChar(char op);
 std::string translateOperator(StringRef Op);
 
 /// Returns the standard type kind for an 'S' substitution, e.g. 'i' for "Int".
-llvm::Optional<StringRef> getStandardTypeSubst(StringRef TypeName);
+///
+/// \param allowConcurrencyManglings When true, allows the standard
+/// substitutions for types in the _Concurrency module that were introduced in
+/// Swift 5.5.
+llvm::Optional<StringRef> getStandardTypeSubst(StringRef TypeName,
+                                              bool allowConcurrencyManglings);
 
 /// Mangles an identifier using a generic Mangler class.
 ///

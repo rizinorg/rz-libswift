@@ -1,32 +1,37 @@
 # Swift demangler for RizinOrg
 
+Apple commit hash `bc0760083da77a8b90c8618b6887316c9538b00d`
+
 * https://github.com/apple/swift/tree/main/include/swift/Demangling
 * https://github.com/apple/swift/tree/main/lib/Demangling
 
 Apple Inc. code with Apache-2.0 license
-* `Remangler.cpp 2014-2017 Apple Inc.`
-* `NodePrinter.cpp 2014-2017 Apple Inc.`
-* `Punycode.cpp 2014-2017 Apple Inc.`
-* `Context.cpp 2014-2017 Apple Inc.`
+* `Remangler.cpp 2014-2024 Apple Inc.`
+* `NodePrinter.cpp 2014-2024 Apple Inc.`
+* `Punycode.cpp 2014-2024 Apple Inc.`
+* `Context.cpp 2014-2024 Apple Inc.`
 * `OldRemangler.cpp 2014-2017 Apple Inc.`
 * `OldDemangler.cpp 2014-2017 Apple Inc.`
-* `swift/Strings.h 2014-2017 Apple Inc.`
-* `swift/AST/Ownership.h 2014-2017 Apple Inc.`
-* `swift/AST/ReferenceStorage.def 2014-2017 Apple Inc.`
+* `swift/Strings.h 2014-2024 Apple Inc.`
+* `swift/AST/Ownership.h 2014-2024 Apple Inc.`
+* `swift/AST/ReferenceStorage.def 2014-2024 Apple Inc.`
+* `swift/ABI/InvertibleProtocols.def 2014-2024 Apple Inc.`
 * `swift/Demangling/Punycode.h 2014-2017 Apple Inc.`
-* `swift/Demangling/ManglingUtils.h 2014-2017 Apple Inc.`
-* `swift/Demangling/Demangle.h 2014-2017 Apple Inc.`
-* `swift/Demangling/ManglingMacros.h 2014-2017 Apple Inc.`
-* `swift/Demangling/DemangleNodes.def 2014-2017 Apple Inc.`
-* `swift/Demangling/Demangler.h 2014-2017 Apple Inc.`
-* `swift/Demangling/StandardTypesMangling.def 2014-2017 Apple Inc.`
+* `swift/Demangling/ManglingUtils.h 2014-2024 Apple Inc.`
+* `swift/Demangling/ManglingFlavor.h 2014-2024 Apple Inc.`
+* `swift/Demangling/Demangle.h 2014-2024 Apple Inc.`
+* `swift/Demangling/ManglingMacros.h 2014-2024 Apple Inc.`
+* `swift/Demangling/DemangleNodes.def 2014-2024 Apple Inc.`
+* `swift/Demangling/Demangler.h 2014-2024 Apple Inc.`
+* `swift/Demangling/StandardTypesMangling.def 2014-2024 Apple Inc.`
 * `swift/Demangling/NamespaceMacros.h 2014-2017 Apple Inc.`
-* `swift/Demangling/ValueWitnessMangling.def 2014-2017 Apple Inc.`
+* `swift/Demangling/ValueWitnessMangling.def 2014-2024 Apple Inc.`
+* `swift/Demangling/Errors.h 2022-2024 Apple Inc.`
 * `swift/Basic/InlineBitfield.h 2014-2017 Apple Inc.`
-* `RemanglerBase.h 2014-2017 Apple Inc.`
+* `RemanglerBase.h 2014-2024 Apple Inc.`
 * `NodeDumper.cpp 2014-2017 Apple Inc.`
-* `Demangler.cpp 2014-2017 Apple Inc.`
-* `ManglingUtils.cpp 2014-2017 Apple Inc.`
+* `Demangler.cpp 2014-2024 Apple Inc.`
+* `ManglingUtils.cpp 2014-2024 Apple Inc.`
 
 
 Rizin Code with License is LGPL-3-0

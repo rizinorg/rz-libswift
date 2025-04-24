@@ -43,6 +43,14 @@ elif cxx_cc.has_argument('-Wno-uninitialized')
   add_project_arguments('-Wno-uninitialized', language: ['cpp'])
 endif
 
+if cxx_cc.has_argument('-Wunused-parameter')
+  add_project_arguments('-Wunused-parameter', language: ['cpp'])
+endif
+
+if cxx_cc.has_argument('-Wimplicit-fallthrough')
+  add_project_arguments('-Wimplicit-fallthrough', language: ['cpp'])
+endif
+
 if cxx_cc.has_argument('-Wc++11-extensions')
   add_project_arguments('-Wc++11-extensions', language: ['cpp'])
 endif

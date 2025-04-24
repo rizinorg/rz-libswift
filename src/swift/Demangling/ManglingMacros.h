@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2014-2017 Apple Inc. <info@apple.com>
+// SPDX-FileCopyrightText: 2014-2024 Apple Inc. <info@apple.com>
 // SPDX-License-Identifier: Apache-2.0
 
 //===--- ManglingMacros.h - Macros for Swift symbol mangling ----*- C++ -*-===//
@@ -20,9 +20,18 @@
 #define MANGLE_AS_STRING(M) STRINGIFY_MANGLING(M)
 
 /// The mangling prefix for the new mangling.
+#if defined(__clang__)
+_Pragma("clang diagnostic push")
+_Pragma("clang diagnostic ignored \"-Wdollar-in-identifier-extension\"")
+#endif
 #define MANGLING_PREFIX $s
+#define MANGLING_PREFIX_EMBEDDED $e
+#if defined(__clang__)
+_Pragma("clang diagnostic pop")
+#endif
 
 #define MANGLING_PREFIX_STR MANGLE_AS_STRING(MANGLING_PREFIX)
+#define MANGLING_PREFIX_EMBEDDED_STR MANGLE_AS_STRING(MANGLING_PREFIX_EMBEDDED)
 
 // The following macros help to create symbol manglings. They can be used
 // if a mangled name is needed at compile-time, e.g. for variable names in the
@@ -42,11 +51,15 @@
 #define NO_ARGS_MANGLING yy
 #define FUNC_TYPE_MANGLING c
 #define NOESCAPE_FUNC_TYPE_MANGLING XE
+#define DIFF_FUNC_TYPE_MANGLING Yjrc
 #define OBJC_PARTIAL_APPLY_THUNK_MANGLING Ta
 #define OPTIONAL_MANGLING(Ty) MANGLING_CONCAT2_IMPL(Ty, Sg)
 
 #define FUNCTION_MANGLING \
           MANGLING_CONCAT2(NO_ARGS_MANGLING, FUNC_TYPE_MANGLING)
+
+#define DIFF_FUNCTION_MANGLING \
+          MANGLING_CONCAT2(NO_ARGS_MANGLING, DIFF_FUNC_TYPE_MANGLING)
 
 #define NOESCAPE_FUNCTION_MANGLING \
           MANGLING_CONCAT2(NO_ARGS_MANGLING, NOESCAPE_FUNC_TYPE_MANGLING)

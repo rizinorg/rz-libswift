@@ -20,6 +20,8 @@ test() {
 			if $IS_CI; then
 				CI_HAS_FAILED=true
 			fi
+			echo "Got: $RET"
+			echo "Exp: $2"
 		else
 			echo "Mismatch: ./swift-demangle \"$1\""
 			echo "Input: $1"
@@ -306,7 +308,6 @@ test _\$S8mangling14varargsVsArray3arr1nySaySiG_SStF mangling.varargsVsArray\(ar
 test _\$S8mangling14varargsVsArray3arr1nySaySiGd_SStF mangling.varargsVsArray\(arr:\ Swift.Array\<Swift.Int\>...\,\ n:\ Swift.String\)\ -\>\ \(\)
 test _\$S8mangling14varargsVsArray3arrySid_tF mangling.varargsVsArray\(arr:\ Swift.Int...\)\ -\>\ \(\)
 test _\$S8mangling14varargsVsArray3arrySaySiGd_tF mangling.varargsVsArray\(arr:\ Swift.Array\<Swift.Int\>...\)\ -\>\ \(\)
-test _T0s13_UnicodeViewsVss22RandomAccessCollectionRzs0A8EncodingR_11SubSequence_5IndexQZAFRtzsAcERpzAE_AEQZAIRSs15UnsignedInteger8Iterator_7ElementRPzAE_AlMQZANRS13EncodedScalar_AlMQY_AORSr0_lE13CharacterViewVyxq__G \(extension\ in\ Swift\):Swift._UnicodeViews\<A\,\ B\>\<A\,\ B\ where\ A:\ Swift.RandomAccessCollection\,\ B:\ Swift.UnicodeVEncoding\,\ A.Index\ ==\ A.SubSequence.Index\,\ A.SubSequence:\ Swift.RandomAccessCollection\,\ A.SubSequence\ ==\ A.SubSequence.SubSequence\,\ A.Iterator.Element:\ Swift.UnsignedInteger\,\ A.Iterator.Element\ ==\ A.SubSequence.Iterator.Element\,\ A.SubSequence.Iterator.Element\ ==\ B.EncodedScalar.Iterator.Element\>.CharacterView
 test _T010Foundation11MeasurementV12SimulatorKitSo9UnitAngleCRszlE11OrientationO2eeoiSbAcDEAGOyAF_G_AKtFZ static\ \(extension\ in\ SimulatorKit\):Foundation.Measurement\<A\ where\ A\ ==\ __C.UnitAngle\>.Orientation.==\ infix\(\(extension\ in\ SimulatorKit\):Foundation.Measurement\<__C.UnitAngle\>.Orientation\,\ \(extension\ in\ SimulatorKit\):Foundation.Measurement\<__C.UnitAngle\>.Orientation\)\ -\>\ Swift.Bool
 test _\$S10Foundation11MeasurementV12SimulatorKitSo9UnitAngleCRszlE11OrientationO2eeoiySbAcDEAGOyAF_G_AKtFZ static\ \(extension\ in\ SimulatorKit\):Foundation.Measurement\<A\ where\ A\ ==\ __C.UnitAngle\>.Orientation.==\ infix\(\(extension\ in\ SimulatorKit\):Foundation.Measurement\<__C.UnitAngle\>.Orientation\,\ \(extension\ in\ SimulatorKit\):Foundation.Measurement\<__C.UnitAngle\>.Orientation\)\ -\>\ Swift.Bool
 test _T04main1_yyF main._\(\)\ -\>\ \(\)

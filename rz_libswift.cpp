@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2021 RizinOrg <info@rizin.re>
-// SPDX-FileCopyrightText: 2021 deroad <wargio@libero.it>
+// SPDX-FileCopyrightText: 2021 deroad <deroad@kumo.xn--q9jyb4c>
 // SPDX-License-Identifier: LGPL-3.0-only
 
 #include <rz_libswift.h>
@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-static char *libswift_demangle_handler(const char *symbol, RzDemanglerFlag flags) {
+static char *libswift_demangle_handler(const char *symbol, RzDemanglerFlag) {
 	if (RZ_STR_ISEMPTY(symbol)) {
 		return NULL;
 	}

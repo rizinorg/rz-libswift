@@ -255,7 +255,7 @@ private:
     Parent->addChild(Child, Factory);
   }
 
-  llvm::Optional<Directness> demangleDirectness(unsigned depth) {
+  llvm::Optional<Directness> demangleDirectness(unsigned) {
     if (Mangled.nextIf('d'))
       return Directness::Direct;
     if (Mangled.nextIf('i'))
@@ -263,7 +263,7 @@ private:
     return llvm::None;
   }
 
-  bool demangleNatural(Node::IndexType &num, unsigned depth) {
+  bool demangleNatural(Node::IndexType &num, unsigned) {
     if (!Mangled)
       return false;
     char c = Mangled.next();
@@ -292,7 +292,7 @@ private:
     return false;
   }
 
-  llvm::Optional<ValueWitnessKind> demangleValueWitnessKind(unsigned depth) {
+  llvm::Optional<ValueWitnessKind> demangleValueWitnessKind(unsigned) {
     char Code[2];
     if (!Mangled)
       return llvm::None;
@@ -1592,7 +1592,7 @@ private:
     return sig;
   }
 
-  NodePointer demangleMetatypeRepresentation(unsigned depth) {
+  NodePointer demangleMetatypeRepresentation(unsigned) {
     if (Mangled.nextIf('t'))
       return Factory.createNode(Node::Kind::MetatypeRepresentation, "@thin");
 
@@ -2294,7 +2294,7 @@ private:
   /// impl-convention ::= 'o'                     // direct, ownership transfer
   ///
   /// Returns an empty string otherwise.
-  StringRef demangleImplConvention(ImplConventionContext ctxt, unsigned depth) {
+  StringRef demangleImplConvention(ImplConventionContext ctxt, unsigned) {
 #define CASE(CHAR, FOR_CALLEE, FOR_PARAMETER, FOR_RESULT)            \
     if (Mangled.nextIf(CHAR)) {                                      \
       switch (ctxt) {                                                \

@@ -3,7 +3,7 @@ project('libswift', 'cpp',
   # Apple library files are Apache 2.0 licensed.
   # library wrapping for rizin is LGPL v3.
   license: ['LGPL3', 'Apache-2.0'],
-  default_options : ['cpp_std=c++11'],
+  default_options : ['cpp_std=c++17'],
   meson_version: '>=0.55.0')
 
 libswift_src = [

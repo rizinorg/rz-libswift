@@ -1,1 +1,2 @@
 option('rizin_plugdir', type: 'string', value: '')
+option('enable_plugin', type: 'boolean', value: true, description: 'builds as a rizin plugin.')

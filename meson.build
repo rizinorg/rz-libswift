@@ -7,7 +7,6 @@ project('libswift', 'cpp',
   meson_version: '>=0.55.0')
 
 libswift_src = [
-    'rz_libswift.cpp',
     'src/libswift.cpp',
     'src/Context.cpp',
     'src/Demangler.cpp',
@@ -23,54 +22,76 @@ libswift_src = [
 rizin = find_program('rizin', required: false)
 cxx_cc = meson.get_compiler('cpp')
 
-rz_demangler_dep = dependency('rz_demangler')
-
-rizin_plugdir = get_option('rizin_plugdir')
-if rizin_plugdir == ''
-  rizin_plugdir = rz_demangler_dep.get_variable(pkgconfig: 'plugindir', cmake: 'rz_demangler_PLUGINDIR')
-endif
-
-warning_flags = []
+libswift_cpp_args = []
 libswift_deps = []
 libswift_incs = ['.', 'src']
 
-libswift_deps += dependency('rz_util')
-libswift_deps += rz_demangler_dep
-
 if cxx_cc.has_argument('-Wno-maybe-uninitialized')
-  add_project_arguments('-Wno-maybe-uninitialized', language: ['cpp'])
+  libswift_cpp_args += '-Wno-maybe-uninitialized'
 elif cxx_cc.has_argument('-Wno-uninitialized')
-  add_project_arguments('-Wno-uninitialized', language: ['cpp'])
+  libswift_cpp_args += '-Wno-uninitialized'
 endif
 
 if cxx_cc.has_argument('-Wunused-parameter')
-  add_project_arguments('-Wunused-parameter', language: ['cpp'])
+  libswift_cpp_args += '-Wunused-parameter'
 endif
 
 if cxx_cc.has_argument('-Wimplicit-fallthrough')
-  add_project_arguments('-Wimplicit-fallthrough', language: ['cpp'])
+  libswift_cpp_args += '-Wimplicit-fallthrough'
 endif
 
 if cxx_cc.has_argument('-Wc++11-extensions')
-  add_project_arguments('-Wc++11-extensions', language: ['cpp'])
+  libswift_cpp_args += '-Wc++11-extensions'
 endif
 
 if cxx_cc.has_argument('-Wc++11-extensions')
-  add_project_arguments('-Wc++11-extensions', language: ['cpp'])
+  libswift_cpp_args += '-Wc++11-extensions'
 endif
 
 if cxx_cc.has_argument('-fvisibility=hidden')
-  add_project_arguments('-fvisibility=hidden', language: ['cpp'])
+  libswift_cpp_args += '-fvisibility=hidden'
 endif
 
 if cxx_cc.has_argument('/EHsc')
-  add_project_arguments('/EHsc', language: ['cpp'])
+  libswift_cpp_args += '/EHsc'
 endif
 
-shared_library('swift', libswift_src,
-  dependencies: libswift_deps,
-  include_directories: include_directories(libswift_incs),
+if cxx_cc.has_argument('-fvisibility=hidden')
+  libswift_cpp_args += '-fvisibility=hidden'
+endif
+
+libswift = static_library('swift', libswift_src,
+  cpp_args: libswift_cpp_args,
+  dependencies: [],
   implicit_include_directories: false,
-  install: true,
-  install_dir: rizin_plugdir
+  install: false,
+  include_directories: include_directories(libswift_incs),
 )
+
+libswift_dep = declare_dependency(
+    link_with: libswift,
+    dependencies: [],
+    include_directories: include_directories('.'),
+)
+
+if get_option('enable_plugin')
+  rz_demangler_dep = dependency('rz_demangler')
+  libswift_deps = [
+    rz_demangler_dep,
+    dependency('rz_util'),
+    libswift_dep
+  ]
+
+  rizin_plugdir = get_option('rizin_plugdir')
+  if rizin_plugdir == ''
+    rizin_plugdir = rz_demangler_dep.get_variable(pkgconfig: 'plugindir', cmake: 'rz_demangler_PLUGINDIR')
+  endif
+
+  shared_library('swift', 'rz_libswift.cpp',
+    dependencies: libswift_deps,
+    include_directories: include_directories(libswift_incs),
+    implicit_include_directories: false,
+    install: true,
+    install_dir: rizin_plugdir
+  )
+endif
